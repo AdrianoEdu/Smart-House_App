@@ -60,6 +60,19 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - images/Caixa0.png
+    - images/Caixa1.png
+    - images/Caixa2.png
+    - images/Caixa3.png
+    - images/Caixa4.png
+    - images/Caixa5.png
+    - images/Caixa6.png
+    - images/Caixa7.png
+    - images/Caixa8.png
+    - images/Caixa9.png
+    - images/Caixa10.png
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
