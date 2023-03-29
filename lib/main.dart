@@ -40,7 +40,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final client = MqttServerClient.withPort("localhost", "Dev.To", 56234);
+  final client = MqttServerClient.withPort("test.mosquitto.org", "", 1883);
 
   var pongCount = 0;
 
@@ -115,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     print('EXAMPLE::Subscribing to the wokwi-iot-simulator-dm120/test');
-    const topic = 'wokwi-iot-simulator-dm120/test';
+    const topic = 'project/water/tank/reponse';
     client.subscribe(topic, MqttQos.atMostOnce);
 
     ///Listener used to capture messages
@@ -133,8 +133,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
       ///Update values received from mqtt server
       setState(() {
-        // _temp = double.parse(responsePayload['temperature'].toString());
-        // _hum = double.parse(responsePayload['humidity'].toString());
+        responseWaterTank.totalCapacityByLiter =
+            double.parse(responsePayload["TotalCapacityByLiter"]);
+        responseWaterTank.currentCapacityByLiter =
+            double.parse(responsePayload["CurrentCapacityByLiter"].toString());
+        responseWaterTank.totalCapacityByMeter =
+            double.parse(responsePayload["TotalCapacityByMeter"].toString());
+        responseWaterTank.currentCapacityByMeter = double.parse(
+            responsePayload["CurrentTotalCapacityByMeter"].toString());
+        responseWaterTank.sent =
+            DateTime.parse(responsePayload["Sent"].toString());
       });
 
       ///Show notification after receiving message
