@@ -41,6 +41,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final client = MqttServerClient.withPort("test.mosquitto.org", "", 1883);
+  double totalByLiter = 0;
+  double currentByLiter = 0;
+  double totalByMeter = 0;
+  double currentByMeter = 0;
+  String date = "";
 
   var pongCount = 0;
 
@@ -63,9 +68,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: SizedBox(
-            child: WaterTankWidget(
-          resp: ResponseWaterTank(),
-        )),
+          child: WaterTankWidget(
+            totalByLiter: totalByLiter,
+            totalByMeter: totalByMeter,
+            currentByLitter: currentByLiter,
+            currentByMeter: currentByMeter,
+            date: date,
+          ),
+        ),
       ),
     );
   }
@@ -115,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     print('EXAMPLE::Subscribing to the wokwi-iot-simulator-dm120/test');
-    const topic = 'project/water/tank/reponse';
+    const topic = 'project/water/tank/response';
     client.subscribe(topic, MqttQos.atMostOnce);
 
     ///Listener used to capture messages
@@ -133,22 +143,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
       ///Update values received from mqtt server
       setState(() {
-        responseWaterTank.totalCapacityByLiter =
-            double.parse(responsePayload["TotalCapacityByLiter"]);
-        responseWaterTank.currentCapacityByLiter =
+        totalByLiter =
+            double.parse(responsePayload["TotalCapacityByLiter"].toString());
+        currentByLiter =
             double.parse(responsePayload["CurrentCapacityByLiter"].toString());
-        responseWaterTank.totalCapacityByMeter =
+        totalByMeter =
             double.parse(responsePayload["TotalCapacityByMeter"].toString());
-        responseWaterTank.currentCapacityByMeter = double.parse(
+        currentByMeter = double.parse(
             responsePayload["CurrentTotalCapacityByMeter"].toString());
-        responseWaterTank.sent =
-            DateTime.parse(responsePayload["Sent"].toString());
+        date = responsePayload["Sent"].toString();
       });
 
       ///Show notification after receiving message
       LocalNotification.showBigTextNotification(
-          title: "Humidity Alert",
-          body: "Your soil has humidity of ",
+          title: "Reponse Water Tank Alert",
+          body: "Status of water tank",
           fln: flutterLocalNotificationsPlugin);
     });
 
